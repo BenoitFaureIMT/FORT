@@ -38,8 +38,7 @@ class ResNeXt50(object):
     def get_features(self, img, bbox):
         t = time.perf_counter()
         im = self.extract_sub_image(img, bbox)
-        dt1 = time.perf_counter() - t
         a = self.extract_features(im)
         dt2 = time.perf_counter() - t
-        Logger.add_to_log("ReID : ", int(dt2 * 1000), " ms | Extraction : ", int(dt1 * 1000), " ms | Network : ", int((dt2 - dt1) * 1000), " ms")
+        Logger.ReIDTimes.append(dt2 * 1000)
         return a

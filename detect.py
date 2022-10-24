@@ -9,31 +9,7 @@ from Detection import YOLOv7
 from Tracker import Cyclop
 from ReID import ResNeXt50
 from Logger import Logger
-
-def draw_txt(img, label, x1, y1, color = (0, 0, 255), text_color = (255, 255, 255)):
-    (w, h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
-
-    cv2.rectangle(img, (x1, y1 - 20), (x1 + w, y1), color, -1)
-    cv2.putText(img, label, (x1, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, text_color, 1)
-
-def display_both(targs, out, ind_dets, img):
-    img_h = img.shape[0]
-    img_w = img.shape[1]
-
-    for i in range(len(out)):
-        x,y,x2,y2 = out[i][:4]
-        cv2.rectangle(img, (int(x), int(y)), (int(x2), int(y2)), (0,255,0), 1)
-        #draw_txt(img, str(int(ind_dets[i])) + " | " + str(int(out[i][4] * 100)) + "%", int(x), int(y), color = (0,255,0), text_color = (0,0,255))
-    
-    for t in targs:
-        x,y,w,h = t.state[0]*img_w,t.state[1]*img_h,t.state[2]*img_w,t.state[3]*img_h
-        cv2.rectangle(img, (int(x - w/2), int(y - h/2)), (int(x + w/2), int(y + h/2)), (0,0,255) if t.missed_detection else (255, 0, 0), 1)
-        draw_txt(img, str(t.id), int(x - w/2), int(y + h/2), color = (255, 0, 0))
-    
-    return img
-
-def clamp01(inp):
-    return  0 if (inp < 0) else (1 if (inp > 1) else inp)
+from Utils import display_both, clamp01
 
 @torch.no_grad()
 def run(
@@ -65,7 +41,8 @@ def run(
         cosine_threshold = cosine_threshold,
         cost_threshold = cost_threshold,
         distance_threshold = distance_threshold)
-
+    
+    #Screen to wait start of tracking
     if wait_screen:
         init_img = np.ones((640, 640, 3)) * 255
         cv2.putText(init_img, "PRESS SPACE TO START", (320 - 160, 320), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
@@ -75,53 +52,57 @@ def run(
             if k == 32:
                 break
 
+    #Start video capture
     cam = cv2.VideoCapture(video)
     videoWidth = int(cam.get(cv2.CAP_PROP_FRAME_WIDTH))
     videoHeight = int(cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
     ret, frame = cam.read()
 
-    frame_count = 1
+    #Init MOT file if necessary
     if save_MOT:
         mot_file = open(video.split('.')[0] + ".txt", 'w')
 
-    interference = []
-
-    if(save_results):
+    #Init results file if necessary
+    if save_results:
         writer = cv2.VideoWriter('output_' + video.split('/')[-1], cv2.VideoWriter_fourcc(*'DIVX'), 25, (640, 640))
 
-    while ret:
-        Logger.add_to_log("-------------------", frame_count, "-------------------")
-        t = time.perf_counter()
+    #Init variables
+    frame_count = 1
 
+    while ret:
+        #Loading frame
         frame = cv2.resize(frame, (640, 640), interpolation=cv2.INTER_LINEAR)
         disp = frame.copy()
         frame = frame[:, :, ::-1].transpose(2, 0, 1)
         frame = np.ascontiguousarray(frame)
-        
+
+        #Logging frame number and strating timer
+        Logger.frameNumber = frame_count
+        t = time.perf_counter()
+
+        #Running detection
         out = det.run_net(frame)
         out = np.clip(out, a_min = 0, a_max = 640)
-        #out = out[out[:,4] > 0.35]
 
-        Logger.add_to_log("Detections : ", len(out))
-        Logger.add_to_log("Detection : ", int((time.perf_counter() - t) * 1000), " ms")
+        #Logging detection inference time
+        Logger.totalDetections = len(out)
+        Logger.detectionTime = (time.perf_counter() - t) * 1000
 
+        #Running tracker
         ind_dets = tr.update(out.copy(), disp, 0.01)
         
-        interference.append((time.perf_counter() - t) * 1000)
-        Logger.add_to_log("Total : ", int(interference[-1]), " ms")
+        #Logging total inference time and printing
+        Logger.totalTime = (time.perf_counter() - t) * 1000
+        Logger.make_log()
+        Logger.print_log()
 
+        #Video feedback
         if show_results or save_results:
             img = display_both(tr.targs, out, ind_dets, disp)
             if show_results:
                 cv2.imshow('Yolov5 + FishSORT', img)
             if save_results:
                 writer.write(img)
-
-        Logger.print_log()
-
-        k = cv2.waitKey(1)
-        if k == 27:
-            break
 
         #MOT
         if save_MOT:
@@ -130,14 +111,22 @@ def run(
                 str(frame_count) + "," + str(t.id + 1) + "," + 
                 str(int(clamp01(t.state[0][0] - t.state[2][0]/2) * videoWidth)) + "," + str(int(clamp01(t.state[1][0] - t.state[3][0]/2) * videoHeight)) + "," + 
                 str(int(clamp01(t.state[2][0]) * videoWidth)) + "," + str(int(clamp01(t.state[3][0]) * videoHeight)) + ",1,-1,-1,-1\n")
-        frame_count += 1
 
-        #Read next
+        #Escape sequence
+        k = cv2.waitKey(1)
+        if k == 27:
+            break
+
+        #Next frame
+        frame_count += 1
         ret, frame = cam.read()
 
-    print("Average total interference : Detection + ReID + Tracking : ", int(sum(interference)/len(interference)), " ms")
-    print("Number of ids detected : ", tr.next_id)
+    #Logging last infos and printing
+    Logger.maxId = tr.next_id
+    Logger.make_final_log()
+    Logger.print_log()
 
+    #Releasing all
     cam.release()
     cv2.destroyAllWindows()
     if save_MOT:
