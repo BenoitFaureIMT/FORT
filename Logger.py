@@ -6,6 +6,7 @@ class Logger:
     prevmsgl = 0
 
     #Infos - flow
+    mxFrameNumber = 0
     frameNumber = 0
     detectionTime = 0
     totalDetections = 0
@@ -33,16 +34,26 @@ class Logger:
 
     @classmethod
     def make_log(self):
-        Logger.add_to_log("-------------------", Logger.frameNumber, "-------------------")
-
-        messages = ["Detections", "", "Detection", *["ReID" for i in range(len(Logger.ReIDTimes))], "FORT", "Total"]
-        values = [Logger.totalDetections, "", int(Logger.detectionTime), *[int(v) for v in Logger.ReIDTimes], int(Logger.totalTime - Logger.totalDetections), int(Logger.totalTime)]
-        units = ["", "","ms", *["ms" for i in range(len(Logger.ReIDTimes))], "ms", "ms"]
+        #Calculate message
+        messages = ["Detections", "Detection", "", *["ReID" for i in range(len(Logger.ReIDTimes))], "", "FORT", "Total"]
+        values = [Logger.totalDetections, int(Logger.detectionTime), "", *[int(v) for v in Logger.ReIDTimes], "", int(Logger.totalTime - Logger.totalDetections), int(Logger.totalTime)]
+        units = ["", "ms", "", *["ms" for i in range(len(Logger.ReIDTimes))], "", "ms", "ms"]
 
         mxLength = max([len(s) for s in messages])
+        hold = []
         for i in range(len(messages)):
-            Logger.add_to_log(messages[i], " " * (mxLength + 1 - len(messages[i])), values[i], " ", units[i])
+            hold.append(Logger.to_String(messages[i], " " * (mxLength + 1 - len(messages[i])), values[i], " ", units[i]))
 
+        #Log message
+        mxLength = max([len(s) for s in hold]) - len(str(Logger.frameNumber)) - len(str(Logger.mxFrameNumber)) - 1
+        Logger.add_to_log("")
+        Logger.add_to_log("-" * (mxLength // 2), Logger.frameNumber, "/", Logger.mxFrameNumber, "-" * (mxLength - mxLength // 2))
+        Logger.add_to_log("")
+
+        for s in hold:
+            Logger.add_to_log(s)
+
+        #Update variables
         Logger.detectionAvg += Logger.detectionTime
         Logger.ReIDAvg += sum(Logger.ReIDTimes)
         Logger.totalAvg += Logger.totalTime

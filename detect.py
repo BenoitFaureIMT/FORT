@@ -66,6 +66,9 @@ def run(
     if save_results:
         writer = cv2.VideoWriter('output_' + video.split('/')[-1], cv2.VideoWriter_fourcc(*'DIVX'), 25, (640, 640))
 
+    #Initialize Logger
+    Logger.mxFrameNumber = int(cam.get(cv2.CAP_PROP_FRAME_COUNT))
+
     #Init variables
     frame_count = 1
 
