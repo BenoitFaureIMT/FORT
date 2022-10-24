@@ -1,0 +1,12 @@
+#python files to ignore
+__pycache__/
+#testing files to ignore
+train/
+
+#Weight files to ingnore
+*.pt
+*.pth
+
+#Video files to ignore
+*.avi
+*.mp4
