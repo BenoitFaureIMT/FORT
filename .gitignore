@@ -10,3 +10,6 @@ train/
 #Video files to ignore
 *.avi
 *.mp4
+
+#Output and info files to ignore
+*.txt

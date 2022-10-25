@@ -86,5 +86,6 @@ class Logger:
         sys.stdout.write(str_msg)
         sys.stdout.flush()
 
-        Logger.prevmsgl = len(Logger.msg)
+        # Logger.prevmsgl = len(Logger.msg)
+        Logger.prevmsgl = len(str_msg.split("\n"))
         Logger.msg.clear()

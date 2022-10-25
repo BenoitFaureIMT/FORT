@@ -1,5 +1,6 @@
 #Dependencies
 import numpy as np
+import cv2
 
 #Module for all utility functions
 #Catalog:
