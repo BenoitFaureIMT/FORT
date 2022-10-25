@@ -36,7 +36,7 @@ class Logger:
     def make_log(self):
         #Calculate message
         messages = ["Detections", "Detection", "", *["ReID" for i in range(len(Logger.ReIDTimes))], "", "FORT", "Total"]
-        values = [Logger.totalDetections, int(Logger.detectionTime), "", *[int(v) for v in Logger.ReIDTimes], "", int(Logger.totalTime - Logger.totalDetections), int(Logger.totalTime)]
+        values = [Logger.totalDetections, int(Logger.detectionTime), "", *[int(v) for v in Logger.ReIDTimes], "", int(Logger.totalTime - Logger.detectionTime), int(Logger.totalTime)]
         units = ["", "ms", "", *["ms" for i in range(len(Logger.ReIDTimes))], "", "ms", "ms"]
 
         mxLength = max([len(s) for s in messages])

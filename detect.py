@@ -115,11 +115,6 @@ def run(
                 str(int(clamp01(t.state[0][0] - t.state[2][0]/2) * videoWidth)) + "," + str(int(clamp01(t.state[1][0] - t.state[3][0]/2) * videoHeight)) + "," + 
                 str(int(clamp01(t.state[2][0]) * videoWidth)) + "," + str(int(clamp01(t.state[3][0]) * videoHeight)) + ",1,-1,-1,-1\n")
 
-        #Escape sequence
-        k = cv2.waitKey(1)
-        if k == 27:
-            break
-
         #Next frame
         frame_count += 1
         ret, frame = cam.read()
