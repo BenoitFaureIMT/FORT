@@ -1,0 +1,15 @@
+# Usage: pip install -r requirements.txt
+
+numpy>=1.18.5
+scipy>=1.4.1
+pandas>=1.1.4
+matplotlib>=3.2.2
+seaborn>=0.11.0
+opencv-python>=4.1.1
+Pillow>=7.1.2
+PyYAML>=5.3.1
+protobuf<4.21.3
+requests>=2.23.0
+torch>=1.7.0,!=1.12.0
+torchvision>=0.8.1,!=0.13.0
+lap>=0.4.0
