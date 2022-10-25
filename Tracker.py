@@ -41,7 +41,7 @@ class Cyclop(object):
             self.filter.pred_next_state(t, dt)
 
         #Filter detections
-        filt = detections[:,4] > 0.4#0.35
+        filt = detections[:,4] > self.cost_threshold
         o_filt = [not f for f in filt]
         sec_detections = detections[o_filt]
         detections = detections[filt] #TODO more work needed here + is it neded?

@@ -145,7 +145,7 @@ def parse_opt():
     parser.add_argument("--alpha", type = float, default = 0.3, help = "alpha coeff for EMA") #0.6
     parser.add_argument("--IoU_threshold", type = float, default = 0.4, help = "IoU threshold for association")
     parser.add_argument("--cosine_threshold", type = float, default = 0.25, help = "Cosine threshold for association")
-    parser.add_argument("--cost_threshold", type = float, default = 0.4, help = "Cosine threshold for association")
+    parser.add_argument("--cost_threshold", type = float, default = 0.4, help = "Threshold between high and low score detections")
     parser.add_argument("--distance_threshold", type = float, default = 0.2, help = "Distance threshold for association")
     opt = parser.parse_args()
     return opt
