@@ -2,7 +2,7 @@
 FORT - Fisheye Online Realtime Tracking
 
 Paper -  
-Dataset - https://github.com/BenoitFaureIMT/CERIS_FishEye
+Fisheye detection dataset - https://github.com/BenoitFaureIMT/CERIS_FishEye
 
 ## Structure
 
