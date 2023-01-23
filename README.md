@@ -52,4 +52,4 @@ All arguments:
   --cost_threshold COST_THRESHOLD
                         Threshold between high and low score detections
   --distance_threshold DISTANCE_THRESHOLD
-                        Distance threshold for association
+                         Distance threshold for association
