@@ -35,22 +35,18 @@ python detect.py --video <path to video> --show_results --save_results [other ar
 
 All arguments:
 
---wait_screen         add a wait screen before tracking starts  
---show_results        display results on screen  
---save_results        save display results  
---save_MOT            save targets to file in MOT format  
---video VIDEO         path to video file  
---weights WEIGHTS     path to YoloV7 weights  
---filter_weight_path FILTER_WEIGHT_PATH  
-                      path to weiths of NNFilter  
---age_max AGE_MAX     age max of tracklets  
---alpha ALPHA         alpha coeff for EMA  
---IoU_threshold IOU_THRESHOLD  
-                      IoU threshold for association  
---cosine_threshold COSINE_THRESHOLD   
-                      Cosine threshold for association  
---cost_threshold COST_THRESHOLD  
-                      Threshold between high and low score detections  
---distance_threshold DISTANCE_THRESHOLD  
-                       Distance threshold for association
- 
+| Option                  | Description                                                                 |
+|-------------------------|-----------------------------------------------------------------------------|
+| --wait_screen           | add a wait screen before tracking starts                                   |
+| --show_results          | display results on screen                                                  |
+| --save_results          | save display results                                                       |
+| --save_MOT              | save targets to file in MOT format                                         |
+| --video                 | path to video file                                                         |
+| --weights               | path to YoloV7 weights                                                     |
+| --filter_weight_path    | path to weiths of NNFilter                                                 |
+| --age_max               | age max of tracklets                                                       |
+| --alpha                 | alpha coeff for EMA                                                        |
+| --IoU_threshold         | IoU threshold for association                                              |
+| --cosine_threshold      | Cosine threshold for association                                           |
+| --cost_threshold        | Threshold between high and low score detections                            |
+| --distance_threshold    | Distance threshold for association                                         |
