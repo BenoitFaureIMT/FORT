@@ -30,7 +30,7 @@ pip install -r requirements.py
 ## Usage
 
 ```bash
-python detect.py --video <path to video> --show_results --save_results [other ars]
+python detect.py --video <path to video> --show_results --save_results [other args]
 ```
 
 All arguments:
