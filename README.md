@@ -35,7 +35,8 @@ python detect.py --video <path to video> --show_results --save_results [other ar
 
 All arguments:
 
-  --wait_screen         add a wait screen before tracking starts  
+|-------------|:------------|
+ | --wait_screen       |  add a wait screen before tracking starts  |
   --show_results        display results on screen  
   --save_results        save display results  
   --save_MOT            save targets to file in MOT format  
