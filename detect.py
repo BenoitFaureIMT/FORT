@@ -143,7 +143,7 @@ def parse_opt():
     parser.add_argument("--filter_weight_path", type = str, default = "filter_weights.npy", help = "path to weiths of NNFilter")
     parser.add_argument("--age_max", type = int, default = 6, help = "age max of tracklets")
     parser.add_argument("--alpha", type = float, default = 0.6, help = "alpha coeff for EMA")
-    parser.add_argument("--IoU_threshold", type = float, default = 0.4, help = "IoU threshold for association")
+    parser.add_argument("--IoU_threshold", type = float, default = 0.4, help = "IoU threshold for association") #tested 0.7 results?
     parser.add_argument("--cosine_threshold", type = float, default = 0.25, help = "Cosine threshold for association")
     parser.add_argument("--cost_threshold", type = float, default = 0.4, help = "Threshold between high and low score detections")
     parser.add_argument("--distance_threshold", type = float, default = 0.2, help = "Distance threshold for association")
